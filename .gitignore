@@ -1,0 +1,7 @@
+node_modules
+app.json
+babel.*
+package.json
+.expo
+package-lock.json
+yarn-error.log
