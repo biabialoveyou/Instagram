@@ -17,11 +17,10 @@ export default class CardList extends React.Component {
 
     renderItem = ({ item }) => {
         const { onPressComments } = this.props;
+        console.log(item)
         return (
             <Card
-                id={item.id}
-                fullname={item.author}
-                image={{uri: getImageFromId(item.id),}}
+                data={item}
                 onPressComments={onPressComments}
             />
         ); 
@@ -35,6 +34,7 @@ export default class CardList extends React.Component {
                 data={items} 
                 renderItem={this.renderItem} 
                 keyExtractor={item => item.id.toString()} 
+                onEndReached={()=>{}}
             />
 );
 }}

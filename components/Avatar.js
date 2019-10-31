@@ -1,33 +1,62 @@
 import React from 'react'
 import Proptypes from 'prop-types'
-import {ColorPropType, StyleSheet, View, Text} from 'react-native'
+import { StyleSheet, View, Text, Image } from 'react-native'
 
-export default function Avatar({size, backgroundColor, initials}) {
-    style = {
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        backgroundColor,
+
+export default function Avatar({ fullname, avatar }) {
+    regexp = /^((https):\/\/)/;
+
+    if(regexp.test(avatar)){
+        console.log({uri: avatar})
+        return (
+            <View style={styles.container}>
+                <Image style={styles.avatar} source={{uri: avatar}} />    
+            </View>
+        )
     }
-    return (
-        <View style={[styles.container, style]}>
-            <Text style={{fontSize : 20,}}>{initials}</Text>
-        </View>
+    else {
+        // Get inititals
+        names = fullname.split(" ")
+        initials = names[0].charAt(0)
+        if (names.length > 1){
+            initials += names[1].charAt(0)
+        }
 
-    )
+        // Generate backgroud color
+        const hexCode = fullname
+              .split('')
+              .reduce((acc, char) => (acc * char.charCodeAt(0)) % 0xffffff, 1)
+              .toString(16);
+        const backgroundColor = `#${'0'.repeat(6 - hexCode.length) + hexCode}`
+
+        return (
+            <View style={[styles.container, styles.avatar, {backgroundColor: backgroundColor}]}>
+                <Text style={styles.initials}>{initials}</Text>
+            </View>
+    
+        )
+    }
 }
+
 
 const styles = StyleSheet.create({
     container: {
         alignItems: "center",
         justifyContent: "center"
+    },
+    avatar: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+    },
+    initials: {
+        fontSize : 20,
     }
 });
 
 
 
 Avatar.Proptypes ={
-    initials: Proptypes.string.isRequired,
-    size: Proptypes.number.isRequired,
-    backgroundColor: ColorPropType.isRequired,
+    avatar: Proptypes.string.isRequired,
+    fullname: Proptypes.number.isRequired,
 };

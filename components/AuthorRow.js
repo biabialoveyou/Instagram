@@ -5,25 +5,12 @@ import PropTypes from 'prop-types'
 import Avatar from './Avatar'
 
 
-export default function AuthorRow({ fullname, linkText, onPressLinkText }){
-    names = fullname.split(" ")
-    initials = names[0].charAt(0)
-    if (names.length > 1){
-        initials += names[1].charAt(0)
-    }
+export default function AuthorRow({ fullname, avatar, linkText, onPressLinkText }){
 
-    getAvatarColor = (name) => {
-        const hexCode = name
-          .split('')
-          .reduce((acc, char) => (acc * char.charCodeAt(0)) % 0xffffff, 1)
-          .toString(16);
-      
-        return `#${'0'.repeat(6 - hexCode.length) + hexCode}`;
-      }
         
     return (
         <View style={styles.container}>
-            <Avatar size={40} backgroundColor={this.getAvatarColor(fullname)} initials={initials} />
+            <Avatar fullname={fullname} avatar={avatar} />
             <Text style={styles.sectionStyle} numberOfLines={1}>{fullname}</Text>
             {
                 !! {linkText} 
