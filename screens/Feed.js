@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, Text, ViewPropTypes, SafeAreaView} from 'react-native';
 
-import { fetchImages } from '../utils/api'; 
+import { fetchPhotos } from '../utils/api'; 
 import CardList from '../components/CardList';
 
 
@@ -22,7 +22,7 @@ export default class Feed extends React.Component {
 
     async componentWillMount() { 
         try {
-            const items = await fetchImages();
+            const items = await fetchPhotos();
             this.setState({ 
                 loading: false, 
                 items,
