@@ -2,8 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Platform } from 'react-native';
 import Constants from 'expo-constants'
 
-import Feed from './screens/Feed'
-import Comments from './screens/Comments'
+import AppNavigator from './routes'
 
 
 export default class App extends React.Component {
@@ -17,56 +16,8 @@ export default class App extends React.Component {
     };
   };
 
-  onPressCloseComments = (comments) => {
-    const { commentsForItem, selectedItemId} = this.state;
-    index = commentsForItem.findIndex((item)=>(item.id===selectedItemId))
-    console.log(index)
-    if(index===-1){
-      this.setState({
-        showComments: false,
-        commentsForItem: [...commentsForItem, 
-                          {id: selectedItemId, comments: comments},]
-      });
-    }
-    else {
-      let updatedArray = commentsForItem
-      updatedArray[index] = {...updatedArray[index], comments: comments}
-
-      this.setState({
-        showComments: false,
-        commentsForItem: updatedArray
-      });
-  }
-};
-
-  onPressFeedComments = id => {
-    this.setState({
-      showComments: true, 
-      selectedItemId: id,
-    });
-  };
-
   render (){
-    const { showComments, commentsForItem, selectedItemId } = this.state;
-    if(showComments){
-      const item = commentsForItem.find((item)=>(item.id===selectedItemId))
-      if(item) {
-        comments = item.comments;
-      }
-      else comments=null;
-      return (
-        <View style={styles.container}>
-            <Comments comments={comments} onPressClose={this.onPressCloseComments}/>
-        </View>
-      );
-    }
-    else{
-      return (
-        <View style={styles.container}>
-            <Feed  style={styles.feed} onPressComments={this.onPressFeedComments}/>
-        </View>
-      );
-    }
+    return <AppNavigator />
   }
 };
 

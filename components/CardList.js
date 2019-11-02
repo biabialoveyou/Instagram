@@ -7,17 +7,11 @@ import PropTypes from 'prop-types'
 
 export default class CardList extends React.Component {
     static propTypes = {
-        items: PropTypes.arrayOf(
-            PropTypes.shape({
-                id: PropTypes.number.isRequired,
-                author: PropTypes.string.isRequired,
-            })
-        ).isRequired,
+        items: PropTypes.array.isRequired,
     };
 
     renderItem = ({ item }) => {
         const { onPressComments } = this.props;
-        console.log(item)
         return (
             <Card
                 data={item}

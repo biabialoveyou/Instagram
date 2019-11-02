@@ -1,9 +1,11 @@
 import React from 'react'
 import {StyleSheet, View, Text, Image, ActivityIndicator, TouchableOpacity, TextInput} from 'react-native'
 import PropTypes from 'prop-types'
+import Icon from 'react-native-vector-icons/Feather';
 import Constants from 'expo-constants'
 import AuthorRow from './AuthorRow'
 import CommentsSection from './CommentsSection'
+
 import timeSince from '../utils/time.js'
 
 
@@ -32,9 +34,17 @@ export default class Card extends React.Component {
     };
 
     handlePressComments = () => {
-        const { onPressComments, id } = this.props;
+        const { onPressComments, data: { id } } = this.props;
 
         onPressComments(id)
+    };
+
+    handlePressUsername = () => {
+
+    };
+
+    handlePressLocation = () => {
+
     };
 
     render() {
@@ -43,11 +53,16 @@ export default class Card extends React.Component {
         if(!description) description = " " 
         return (
             <View style={styles.container}>
+                
+                {/* Author ROW */}
                 <AuthorRow 
                     fullname={user.name}
                     avatar={user.profile_image.large}
-                    linkText={"Comments"} 
-                    onPressLinkText={this.handlePressComments} />
+                    location={user.location}
+                    onPressUsername={this.handlePressUsername} 
+                    onPressLocation={this.handlePressLocation} 
+                />
+
                 <View style={styles.imageStyle}>
                     {
                         loading && (<ActivityIndicator style={StyleSheet.absoluteFill} size={'large'}/>)
@@ -58,14 +73,15 @@ export default class Card extends React.Component {
                 {/* icons */}
                 <View style={{flexDirection: 'row'}}>
                     <TouchableOpacity onPress={()=>{}}>
-                        <Image source={require('../assets/like.png')} /> 
+                        <Icon name="heart" size={40} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.handlePressComments}>
-                        <Image source={require('../assets/comment.png')} />
+                        <Icon name="message-circle" size={40} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{}}>
-                        <Image source={require('../assets/share.png')} />
+                        <Icon name="send" size={40} />  
                     </TouchableOpacity>
+                    <Icon name="bookmark" size={40} />
                    
                 </View>
                 
