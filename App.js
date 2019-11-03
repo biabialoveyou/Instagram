@@ -23,20 +23,3 @@ export default class App extends React.Component {
 
 const platformVersion = Platform.OS === 'ios' ? parseInt(Platform.Version, 10) : Platform.Version;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: 'flex-start',
-    alignItems: 'stretch',
-    backgroundColor: '#fff',
-    marginTop: Constants.statusBarHeight,
-  },
-  cardStyle: {
-    height: 100
-  },
-  feed: {
-    flex: 1,
-    marginTop: Platform.OS === 'android' || platformVersion < 11 ? Constants.statusBarHeight : 0,
-  },
-});

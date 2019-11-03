@@ -19,7 +19,6 @@ export const fetchPhotos = async () => {
   const url = base_url + 'photos/?client_id=' + CLIENT_ID;
   const response = await fetch(url);
   const photos = await response.json()
-  console.log("API HIT")
   return photos.slice(0, 5);
 }
 
@@ -32,7 +31,6 @@ export const fetchPhotosByUser = async (link) => {
 
 export const fetchPhotoById = async (id) => {
   url = base_url + "photos/" + id + "/?client_id=" + CLIENT_ID;
-  console.log(url)
   const response = await fetch(url);
   const photo = await response.json()
   return photo

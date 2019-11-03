@@ -5,7 +5,8 @@ import { View,
          ActivityIndicator, 
          Text, 
          ViewPropTypes, 
-         SafeAreaView} from 'react-native';
+         SafeAreaView, KeyboardAvoidingView} from 'react-native';
+import FlashMessage from "react-native-flash-message";
 
 import store from '../store'
 import { fetchPhotos } from '../utils/api'; 
@@ -69,8 +70,6 @@ export default class Feed extends React.Component {
     };
 
     onPressFeedComments = id => {
-        console.log("ID is")
-        console.log(id)
         store.setState({ showComments: true,  selectedItemId: id,})
     };
 
@@ -112,23 +111,23 @@ export default class Feed extends React.Component {
         }
         if(showComments){
             const item = commentsForItem.find((item)=>(item.id===selectedItemId));
+            if(item) {
+                comments = item.comments;
+            }
+            else comments=null;
 
-        if(item) {
-            comments = item.comments;
-        }
-        else comments=null;
-
-        return (
-            <View style={styles.container}>
-                <Comments comments={comments} onPressClose={this.onPressCloseComments}/>
-            </View>
-        );
+            return (
+                <View style={styles.container}>
+                    <Comments comments={comments} onPressClose={this.onPressCloseComments}/>
+                </View>
+            );
         }
 
         else{
             return (
-                <SafeAreaView style={style}>
+                <SafeAreaView style={style} behavior="padding">
                     <CardList items={feedItems} onPressComments={this.onPressFeedComments}/>
+                    <FlashMessage position="top" style={{alignItems: 'center'}}/>
                 </SafeAreaView>
             );
         }

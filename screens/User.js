@@ -5,20 +5,6 @@ import { fetchPhotos, fetchPhotosByUser, fetchPhotoById } from '../utils/api';
 import timeSince from '../utils/time'; 
 
 
-renderGridItem = (item) => {
-    const index = item.index;
-    const width = Dimensions.get('window').width;
-    const { renderItem, numberColumns, itemMargin } = this.props;
-
-    const size = PixelRatio.roundToNearestPixel(
-        (width - (numberColumns-1) * itemMargin)) / numberColumns;
-    const marginLeft = index % numberColumns === 0 ? 0 : itemMargin;
-    const marginTop = index < numberColumns ? 0 : itemMargin;
-    
-    return renderItem(item, size, marginLeft, marginTop)
-};
-
-
 export default class User extends React.Component {
     // static propTypes = {
 

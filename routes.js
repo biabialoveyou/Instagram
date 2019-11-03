@@ -4,7 +4,7 @@ import { StackNavigator, TabNavigator } from 'react-navigation';
 
 import User from './screens/User';
 import Feed from './screens/Feed';
-
+import Liked from './screens/Liked';
 
 
 const UserScreens = StackNavigator (
@@ -38,6 +38,23 @@ const FeedScreens = StackNavigator (
     },
 );
 
+const LikedScreens = StackNavigator (
+    {   
+        Liked: {
+            screen: Liked,  
+        },
+        // Favorites: {
+        //     screen: Favorites,
+        // },
+    }, 
+    {
+        initialRouteName: 'Liked',
+        navigationOptions: {
+            tabBarIcon: <Icon name="heart" size={30}  />,
+        },
+    },
+);
+
 export default TabNavigator(
     { 
         Feed: {
@@ -45,6 +62,9 @@ export default TabNavigator(
         },
         User: {
             screen: UserScreens,
+        },
+        Liked: {
+            screen: LikedScreens,
         },
        
     },
@@ -55,10 +75,10 @@ export default TabNavigator(
                 style: {
                     backgroundColor: '#fffdfc',
                 },
+                activeBackgroundColor: '#EFEFEF',
+                inactiveBackgroundColor: '#ffffff',
                 showLabel: false,
                 showIcon: true,
-                activeTintColor: '#000000', 
-                inactiveTintColor: 'green',
                 renderIndicator: () => null,
             },
         },

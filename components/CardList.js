@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList} from 'react-native'
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 
 import Card from './Card'
 import {getImageFromId} from '../utils/api'
@@ -24,7 +24,7 @@ export default class CardList extends React.Component {
         const { items } = this.props;
 
         return ( 
-            <FlatList 
+            <KeyboardAwareFlatList 
                 data={items} 
                 renderItem={this.renderItem} 
                 keyExtractor={item => item.id.toString()} 

@@ -8,7 +8,7 @@ let state = {
     selectedItemId: null,
 
     // liked
-    likedPhotos: [],
+    liked: ['C3jVhpdBJx0', 'C3jVhpdBJx0'],
 
     // user
     isFetchingUserPhotos: true,
