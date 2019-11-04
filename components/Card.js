@@ -6,6 +6,7 @@ import { showMessage, } from "react-native-flash-message";
 import AuthorRow from './AuthorRow'
 import ActionRow from './ActionRow'
 import store from '../store'
+import { fetchPhotoById } from '../utils/api'; 
 
 
 export default class Card extends React.Component {
@@ -73,6 +74,10 @@ export default class Card extends React.Component {
         onPressUsername(user)
     };
 
+    getLikedImages (id) {
+        return fetchPhotoById(id);
+    }
+
     lastTap = null;
     handleDoubleTap = () => {
         const now = Date.now();
@@ -81,8 +86,10 @@ export default class Card extends React.Component {
         const liked = store.getState().liked;
 
         if (this.lastTap && (now - this.lastTap) < DOUBLE_PRESS_DELAY) {
-             if(liked.findIndex(item=>item===id) === -1){
-                store.setState({liked: [...liked, id]});
+             if(liked.findIndex(item=>item.id===id) === -1){
+                this.getLikedImages(id).then(
+                    newImage=>{store.setState({liked: [...liked, {id, info: newImage}]})}
+                )
                 showMessage({
                     message: "Saved in your liked collection.",
                     type: "info",
@@ -91,7 +98,7 @@ export default class Card extends React.Component {
             }
             else{
                 // TODO GET 
-                store.setState({liked: liked.filter(item=>item!==id)});
+                store.setState({liked: liked.filter(item=>item.id!==id)});
                 showMessage({
                     message: "You've unliked this photo.",
                     type: "info",
