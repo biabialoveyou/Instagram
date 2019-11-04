@@ -1,7 +1,6 @@
 import React from 'react'
-import {StyleSheet, View, Text, Image, ActivityIndicator, TouchableWithoutFeedback} from 'react-native'
+import {StyleSheet, View, Share, Image, ActivityIndicator, TouchableWithoutFeedback} from 'react-native'
 import PropTypes from 'prop-types'
-import { Share, Button } from 'react-native';
 import { showMessage, } from "react-native-flash-message";
 
 import AuthorRow from './AuthorRow'
@@ -10,9 +9,13 @@ import store from '../store'
 
 
 export default class Card extends React.Component {
-    // static propTypes = {
-        
-    // };
+    static propTypes = {
+        data: PropTypes.object.isRequired,
+        onPressComments: PropTypes.func,
+        onPressUsername: PropTypes.func,
+        onPressFinishComments: PropTypes.func,
+        onPressInputComments: PropTypes.func,
+    };
 
     static defaultProps = {
         linkText: '',

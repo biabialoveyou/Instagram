@@ -1,8 +1,6 @@
 import React from 'react'
 import {StyleSheet, View, ScrollView, Text} from 'react-native'
 
-import PropTypes from 'prop-types';
-
 
 export default class CommentList extends React.Component {
     renderItem = (comment, index) => {

@@ -1,18 +1,6 @@
 
 const base_url = 'https://api.unsplash.com/'
 const CLIENT_ID='04d30b64effa52cb6b92a2c82e71f210405c4e2ac8b0f0ad7f09469e4435f462'
-
-
-
-export const getImageFromId = id => {
-    // const response = await fetch(
-    //   `https://unsplash.it/600/600/?image=`,
-    // );
-    // const image = response.json();
-    // return image;
-    uri = 'https://unsplash.it/600/600/?image=' + id
-    return uri;
-  };
   
 
 export const fetchPhotos = async () => {
@@ -35,11 +23,6 @@ export const fetchPhotoById = async (id) => {
   const photo = await response.json()
   return photo
 }
-
-  //users/alejandroescamilla/photos
-
-
-
 
   // Object {
   //   "alt_description": "gray concrete building",

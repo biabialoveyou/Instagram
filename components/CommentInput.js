@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View, TextInput, Image, ActivityIndicator} from 'react-native'
+import {StyleSheet, View, TextInput, } from 'react-native'
 
 
 export default class CommentInput extends React.Component {

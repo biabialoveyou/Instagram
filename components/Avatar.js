@@ -7,7 +7,6 @@ export default function Avatar({ fullname, avatar }) {
     regexp = /^((https):\/\/)/;
 
     if(regexp.test(avatar)){
-        console.log({uri: avatar})
         return (
             <View style={styles.container}>
                 <Image style={styles.avatar} source={{uri: avatar}} />    
@@ -53,7 +52,6 @@ const styles = StyleSheet.create({
         fontSize : 20,
     }
 });
-
 
 
 Avatar.Proptypes ={

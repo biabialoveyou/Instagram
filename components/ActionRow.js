@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View, Text, Image, Modal, TouchableOpacity, TextInput} from 'react-native'
+import {StyleSheet, View, Text, Image, TouchableOpacity, TextInput} from 'react-native'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/Feather';
 import { showMessage, } from "react-native-flash-message";

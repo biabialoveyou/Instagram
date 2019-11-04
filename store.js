@@ -13,12 +13,6 @@ let state = {
     // user
     isFetchingUserPhotos: true,
     isFetchingUserPhotosError: false,
-
-    
-    // contacts: [],
-    // user: [],
-    
-    // error: false,
 }
 
 const listeners = [];

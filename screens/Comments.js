@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import NavigationBar from '../components/NavigationBar';
 import CommentInput from '../components/CommentInput';
@@ -10,8 +10,6 @@ export default class Comments extends React.Component {
     state = {
         comments: this.props.comments,
     }
-
-    
 
     handleSubmitEditing = newComment => {
         const { comments } = this.state;

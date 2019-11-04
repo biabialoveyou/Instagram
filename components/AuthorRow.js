@@ -1,13 +1,11 @@
 import React from 'react'
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
-import Geocoder from 'react-native-geocoding';
 
 import Avatar from './Avatar'
 
 
 export default function AuthorRow({ fullname, avatar, handlePressUsername, }){
-    
     return (
         <View style={styles.container}>
             <Avatar fullname={fullname} avatar={avatar} />
@@ -20,7 +18,6 @@ export default function AuthorRow({ fullname, avatar, handlePressUsername, }){
                     <Text>{"· · ·"}</Text>
             </TouchableOpacity>
         </View>
-        
     )
 }
 
@@ -48,4 +45,6 @@ const styles = StyleSheet.create({
 
 AuthorRow.propTypes = {
     fullname : PropTypes.string.isRequired,
+    avatar: PropTypes.string.isRequired,
+    handlePressUsername: PropTypes.func.isRequired
 }
