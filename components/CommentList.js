@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View, ScrollView, Image, ActivityIndicator, Text} from 'react-native'
+import {StyleSheet, View, ScrollView, Text} from 'react-native'
 
 import PropTypes from 'prop-types';
 
@@ -21,8 +21,6 @@ export default class CommentList extends React.Component {
         else{
             return <View style={styles.comment}><Text>{"No Comments Yet"}</Text></View>;
         }
-        
-    
     };
 
 }

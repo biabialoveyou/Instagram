@@ -2,17 +2,11 @@ import React from 'react'
 import {StyleSheet, View, Text, Image, Modal, TouchableOpacity, TextInput} from 'react-native'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/Feather';
-import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
-
- 
-import { Share, Button } from 'react-native';
-import Constants from 'expo-constants'
+import { showMessage, } from "react-native-flash-message";
 
 import store from '../store'
-import AuthorRow from './AuthorRow'
-import CommentsSection from './CommentsSection'
-
 import timeSince from '../utils/time.js'
+import { fetchPhotoById } from '../utils/api'; 
 
 
 export default class ActionRow extends React.Component {
@@ -28,6 +22,7 @@ export default class ActionRow extends React.Component {
         likes: PropTypes.number.isRequired,
         onPressComments: PropTypes.func.isRequired,
         onPressShare: PropTypes.func.isRequired,
+        onPressUsername: PropTypes.func.isRequired,
         id: PropTypes.string.isRequired,
     };
 
@@ -38,6 +33,7 @@ export default class ActionRow extends React.Component {
 
     state = {
         liked: store.getState().liked,
+        text: ''
     };
 
     componentWillMount() { 
@@ -48,11 +44,17 @@ export default class ActionRow extends React.Component {
         });
     }
 
+    getLikedImages (id) {
+        return fetchPhotoById(id);
+    }
+
     handlePressLike = () => {
         const { id } = this.props;
         const liked = store.getState().liked;
-        if(liked.findIndex(item=>item===id) === -1){
-            store.setState({liked: [...liked, id]});
+        if(liked.findIndex(item=>item.id===id) === -1){
+            this.getLikedImages(id).then(
+                newImage=>{store.setState({liked: [...liked, {id, info: newImage}]})}
+            )
             showMessage({
                 message: "Saved in your liked collection.",
                 type: "info",
@@ -60,56 +62,88 @@ export default class ActionRow extends React.Component {
             });
         }
         else{
-            store.setState({liked: liked.filter(item=>item!==id)});
+            store.setState({liked: liked.filter(item=>item.id!==id)});
             showMessage({
                 message: "You've unliked this photo.",
                 type: "info",
                 backgroundColor: '#000000'
             });
         }
+        console.log(store.getState().liked)
+    };
+
+    handleChangeText = (text) => {
+        this.setState({text: text});
+    };
+
+    handleSubmitEditing = () => {
+        const { onPressFinishComments } = this.props;
+        const { text } = this.state;
+
+        if (!text) return;
+
+        onPressFinishComments(text);
+        this.setState({text: ''});
+        showMessage({
+            message: "Comment Added!",
+            type: "info",
+            backgroundColor: '#66b3ff'
+        });
     };
 
     componentWillUnmount() {
         this.unsubscribe();
+        this.setState({text: ''});
     };
 
     render () {
-        const { id, updated_at, likes, description, instagram_username, onPressComments, onPressShare } = this.props;
+        const { id, updated_at, likes, description, instagram_username,
+                onPressComments, onPressShare, onPressUsername, onPressInputComments } = this.props;
+        const { text } = this.state;
         const liked = store.getState().liked;
-        isLiked = liked.find(item=>item===id)
-        return (
-        <View style={styles.container}>
-            {/* icons */}
-            <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity style={styles.icons} onPress={this.handlePressLike}>
-                   {isLiked ? <Icon ref={this.heartIcon} name="heart" size={40} color='#fc0349'/> : 
-                              <Icon ref={this.heartIcon} name="heart" size={40}/>}
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.icons} onPress={onPressComments}>
-                    <Icon name="message-circle" size={40} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.icons} onPress={onPressShare}>
-                    <Icon name="send" size={40} />  
-                </TouchableOpacity >
-                <TouchableOpacity style={styles.bookmark}>
-                    <Icon name="bookmark" size={40} />
-                </TouchableOpacity>
-            </View>
-        
-            {/* text */}
-            <Text style={styles.boldText}>{likes + " likes"}</Text>
-            <Text>
-                <Text style={styles.boldText}>{instagram_username}</Text>
-                <Text>{"  "+ description}</Text>
-            </Text>
-            <Text style={styles.viewCommentsText} onPress={onPressComments}>View all comments</Text>
+        isLiked = liked.find(item=>item.id===id)
 
-            {/* Comments */}
-            <View style={styles.comments}>
-                <Image style={styles.commentsAvatar} source={require('../assets/profile.jpg')} />
-                <TextInput 
-                    placeholder={"Add a comment..."} /> 
-            </View>
+        return (
+            <View style={styles.container}>
+                {/* icons */}
+                <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity style={styles.icons} onPress={this.handlePressLike}>
+                    {isLiked ? <Icon ref={this.heartIcon} name="heart" size={40} color='#fc0349'/> : 
+                                <Icon ref={this.heartIcon} name="heart" size={40}/>}
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.icons} onPress={onPressComments}>
+                        <Icon name="message-circle" size={40} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.icons} onPress={onPressShare}>
+                        <Icon name="send" size={40} />  
+                    </TouchableOpacity >
+                    <TouchableOpacity style={styles.bookmark}>
+                        <Icon name="bookmark" size={40} />
+                    </TouchableOpacity>
+                </View>
+        
+                {/* text */}
+                <Text style={styles.boldText}>{likes + " likes"}</Text>
+                <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity onPress={onPressUsername}>
+                        <Text style={styles.boldText}>{instagram_username}</Text>
+                    </TouchableOpacity>
+                    <Text style={{paddingTop: 10}}>{"  "+ description}</Text>
+                </View>
+                <Text style={styles.viewCommentsText} onPress={onPressComments}>View all comments</Text>
+
+                {/* Comments */}
+                <View style={styles.comments}>
+                    <Image style={styles.commentsAvatar} source={require('../assets/profile.jpg')} />
+                    <TextInput 
+                        placeholder={"Add a comment..."}
+                        value={text}
+                        blurOnSubmit={false}
+                        onTouchStart={onPressInputComments}
+                        onChangeText={this.handleChangeText}
+                        onSubmitEditing={this.handleSubmitEditing}
+                     /> 
+                </View>
 
             {/* time */}
             <Text style={styles.updated}>{timeSince(updated_at)}</Text>
@@ -129,7 +163,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     bookmark: {
-        marginLeft: 200,
+        marginLeft: 'auto',
         justifyContent: 'center',
     },
     boldText: {

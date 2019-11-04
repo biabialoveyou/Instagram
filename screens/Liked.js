@@ -1,17 +1,17 @@
 import React from 'react'
 import {StyleSheet, FlatList, View, Text, Image, ActivityIndicator, TouchableOpacity,} from 'react-native'
-import { fetchPhotoById } from '../utils/api'; 
+import Icon from 'react-native-vector-icons/AntDesign';
 
 import store from '../store'
 
 
 export default class Liked extends React.Component {
+    static navigationOptions = {
+        title: 'Liked Photos',
+      };
+
     state = {
         liked: store.getState().liked,
-        images: [],
-        loading: true,
-        error: false,
-        displayed: [],
     };
 
     async componentWillMount() { 
@@ -20,36 +20,15 @@ export default class Liked extends React.Component {
                 liked: store.getState().liked,
             })
         });
-
-       const { liked } = store.getState();
-        console.log("liked")
-        console.log(liked)
-
-        try {
-            for(let i = 0; i < liked.length; i++){
-                const { images } = this.state;
-                const newImage = await fetchPhotoById(liked[i])
-                this.setState({ images: [...images, newImage], loading: false });
-            };
-
-        } 
-        catch (e) {
-            this.setState({ loading: false, error: true });
-        }
-
-        this.setState({displayed: liked}) 
     };
-
-    shouldComponentUpdate(){
-        return displayed != liked;
-    }
 
     componentWillUnmount() {
         this.unsubscribe();
     }
 
-    renderItem= ({item}) => {
-        const { urls } = item;
+    renderItem= liked => {
+        const { item: {info: {urls}} } = liked;
+        
         return (
             <View>
                 <TouchableOpacity  activeOpacity={0.75}>
@@ -61,19 +40,22 @@ export default class Liked extends React.Component {
     
 
     render (){
-        const { images, loading, error } = this.state;
+        const { liked } = store.getState();
         keyExtractor = item => item.id;
-        if (loading) {
-            return <ActivityIndicator size="large" />;
-        }
-        if (error) {
-            return <Text>dddd</Text>  
+        if(liked.length===0){
+            return (
+                <View style={styles.textContainer}>
+                    <Icon name="heart" size={30} color='#edd3e8' />
+                        <Text style={styles.text}>Your liked photo will show up here</Text>
+                    <Icon name="heart" size={30} color='#edd3e8' />
+                </View>
+            )
         }
         return (
             <View style={styles.container}> 
                 <FlatList 
                         numColumns={2}
-                        data={images}
+                        data={liked}
                         renderItem={this.renderItem}
                         keyExtractor={keyExtractor}
                 />
@@ -89,27 +71,20 @@ const styles = StyleSheet.create({
         paddingTop: 5,
         paddingBottom: 50 
     },
-    username: {
-        height: 40,
-        fontSize: 30,
-        fontFamily: 'GillSans-SemiBold',
-    },
-    imageContainer:{
-        height: 220,
-        marginBottom: 20,
-        alignItems: 'center'
+    textContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingTop: 300,
     },
     image: {
-        marginLeft: 1,
-        width: 200,
-        height: 200,
+        width: 190,
+        height: 190,
     },
-    location: {
-        fontWeight: 'bold',
-        fontSize: 10,
-    },
-    created: {
-        fontSize: 15,
+    text: {
         fontFamily: 'GillSans-SemiBold',
+        fontSize: 18,
+        color: '#615b60',
+        marginLeft: 10,
+        marginRight: 10
     }
 })

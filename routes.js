@@ -7,6 +7,27 @@ import Feed from './screens/Feed';
 import Liked from './screens/Liked';
 
 
+const getTabBarIcon = name => ({ tintColor }) => (
+    <Icon name={name} size={30} style={{ color: tintColor }} />
+);
+
+const FeedScreens = StackNavigator (
+    {   
+        Feed: {
+            screen: Feed,  
+        },
+        Route1: {
+            screen: User,
+        },
+    }, 
+    {
+        initialRouteName: 'Feed',
+        navigationOptions: {
+            tabBarIcon: getTabBarIcon('home'),
+        },
+    },
+);
+
 const UserScreens = StackNavigator (
     {   
         User: {
@@ -16,24 +37,7 @@ const UserScreens = StackNavigator (
     {
         initialRouteName: 'User',
         navigationOptions: {
-            tabBarIcon: <Icon name="users" size={30} />,
-        },
-    },
-);
-
-const FeedScreens = StackNavigator (
-    {   
-        Feed: {
-            screen: Feed,  
-        },
-        // Favorites: {
-        //     screen: Favorites,
-        // },
-    }, 
-    {
-        initialRouteName: 'Feed',
-        navigationOptions: {
-            tabBarIcon: <Icon name="home" size={30}  />,
+            tabBarIcon: getTabBarIcon('users'),
         },
     },
 );
@@ -43,14 +47,11 @@ const LikedScreens = StackNavigator (
         Liked: {
             screen: Liked,  
         },
-        // Favorites: {
-        //     screen: Favorites,
-        // },
     }, 
     {
         initialRouteName: 'Liked',
         navigationOptions: {
-            tabBarIcon: <Icon name="heart" size={30}  />,
+            tabBarIcon: getTabBarIcon('heart'),
         },
     },
 );
@@ -75,31 +76,11 @@ export default TabNavigator(
                 style: {
                     backgroundColor: '#fffdfc',
                 },
-                activeBackgroundColor: '#EFEFEF',
-                inactiveBackgroundColor: '#ffffff',
+                activeTintColor: '#e07575', 
+                inactiveTintColor: 'black',
                 showLabel: false,
                 showIcon: true,
                 renderIndicator: () => null,
             },
         },
 );
-
-
-
-
-// const UserScreens = StackNavigator (
-//     {   
-//         User: {
-//             screen: User,
-//         },
-//         Options: {
-//             screen: Options,
-//         }
-//     }, 
-//     {
-//         initialRouteName: 'User',
-//         navigationOptions: {
-//             tabBarIcon: getTabBarIcon('person'),
-//         },
-//     },
-// );

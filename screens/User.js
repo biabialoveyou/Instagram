@@ -1,28 +1,56 @@
 import React from 'react'
-import {StyleSheet, FlatList, View, Text, Image, ActivityIndicator, TouchableOpacity,} from 'react-native'
+import {StyleSheet, FlatList, View, Text, Image, Dimensions, } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo';
-import { fetchPhotos, fetchPhotosByUser, fetchPhotoById } from '../utils/api'; 
+import { fetchPhotosByUser, } from '../utils/api'; 
 import timeSince from '../utils/time'; 
 
 
+imageWidth = Dimensions.get('window').width / 2;
+
 export default class User extends React.Component {
-    // static propTypes = {
-
-    // };
-
+    static navigationOptions = {
+        title: 'User',
+      };
+      
     state = {
-       photos: [],
-       cursor: 0
-    }
+        username: '',
+        photos: [],
+        cursor: 0,
+        length: 0,
+        total: 0,
+        likes: 0,
+    };
 
     async componentWillMount (){
-        response = await fetchPhotosByUser("https://api.unsplash.com/users/claybanks/photos")
-        
-        this.setState({
-            photos: response,
-            cursor: 0,
-            length: response.length,
-        })
+        if(this.props.navigation.state.params){
+            const { navigation: { state: {params: {user}}}} = this.props;
+           
+            const { links :{ photos }, instagram_username, total_photos, total_likes } = user;
+            this.setState({
+                username: instagram_username
+            });
+            response = await fetchPhotosByUser(photos)
+            this.setState({
+                photos: response,
+                cursor: 0,
+                length: response.length,
+                total: total_photos,
+                likes: total_likes,
+            })
+        }
+        else{ // Show default user screen
+            this.setState({
+                username: '12tan34'
+            });
+            response = await fetchPhotosByUser('https://api.unsplash.com/users/12tan34/photos')
+            this.setState({
+                photos: response,
+                cursor: 0,
+                length: response.length,
+                total: 27,
+                likes: 2,
+            })
+        };
     };
 
     getImages = () => {
@@ -32,42 +60,33 @@ export default class User extends React.Component {
         })
     }
 
-    async getImageById (id) {
-        return await fetchPhotoById(id)
-    }
-
     renderItem = (item) => {
-        const { item: { urls, likes, created_at } } = item
+        const { item: { urls, created_at } } = item
         return (
 
             <View style={styles.imageContainer}> 
-                <TouchableOpacity style={styles.image}
-                    activeOpacity={0.75}>
-                    {/* //onPress={()=> this.props.onPress(item.uri)}> */}
-                    <Image source={{uri: urls.regular}} style={styles.image}/>
-                </TouchableOpacity>
-                {/* <Text style={styles.location}>{location}</Text> */}
+                <Image source={{uri: urls.regular}} style={styles.image}/>
             <Text style={styles.created}>{timeSince(created_at)}</Text>
             </View>
         )
     };
 
     render () {
-        const { cursor, photos } = this.state;
+        const { cursor, photos, username, total, likes} = this.state;
         keyExtractor = item => item.id;
 
         return (
             <View style={styles.container}>
-                <Text style={styles.username}>Jike Zhang</Text>
-                <View style={{flexDirection:'row', justifyContent: 'center'}}>
-                    <Icon name="location-pin" size={30} color="#4F8EF7" />
-                    <Text> New York</Text>
-                    <Icon name="heart" size={30} color="#d80000" />
-                    <Text> New York</Text>
+                <Text style={styles.username}>{username}</Text>
+                <View style={styles.data}>
+                    <Icon style={styles.icon} name="camera" size={20} color="#4F8EF7" />
+                    <Text>{total+" Photos"}</Text>
+                    <Icon style={styles.icon} name="heart" size={20} color="#d80000" />
+                    <Text>{likes + " Likes"}</Text>
                 </View>
                 <FlatList 
                     numColumns={2}
-                    data={photos.slice(0, cursor+20)}
+                    data={photos.slice(0, cursor+6)}
                     renderItem={this.renderItem}
                     keyExtractor={keyExtractor}
                     onEndReached={this.getImages}
@@ -88,15 +107,23 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontFamily: 'GillSans-SemiBold',
     },
+    data: {
+        flexDirection:'row', 
+        justifyContent: 'space-between',
+        padding: 5,
+    },
+    icon: {
+        marginLeft: 10,
+        marginRight: 10
+    },
     imageContainer:{
         height: 220,
         marginBottom: 20,
         alignItems: 'center'
     },
     image: {
-        marginLeft: 1,
-        width: 200,
-        height: 200,
+        width: imageWidth,
+        height: imageWidth,
     },
     location: {
         fontWeight: 'bold',

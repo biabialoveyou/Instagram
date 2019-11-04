@@ -1,14 +1,12 @@
 import React from 'react'
-import {StyleSheet, View, Text, Image, ActivityIndicator, TextInput} from 'react-native'
+import {StyleSheet, View, Text, Image, ActivityIndicator, TouchableWithoutFeedback} from 'react-native'
 import PropTypes from 'prop-types'
-import Icon from 'react-native-vector-icons/Feather';
 import { Share, Button } from 'react-native';
-import Constants from 'expo-constants'
+import { showMessage, } from "react-native-flash-message";
 
 import AuthorRow from './AuthorRow'
 import ActionRow from './ActionRow'
-
-import timeSince from '../utils/time.js'
+import store from '../store'
 
 
 export default class Card extends React.Component {
@@ -37,9 +35,13 @@ export default class Card extends React.Component {
 
     handlePressComments = () => {
         const { onPressComments, data: { id } } = this.props;
-
         onPressComments(id)
     };
+
+    handleInputComments = () => {
+        const { onPressInputComments, data: { id } } = this.props;
+        onPressInputComments(id)
+    }
 
     handlePressShare = async () => {
         try {
@@ -64,16 +66,46 @@ export default class Card extends React.Component {
       };
 
     handlePressUsername = () => {
-
+        const { onPressUsername, data: { user } } = this.props;
+        onPressUsername(user)
     };
 
-    handlePressLocation = () => {
+    lastTap = null;
+    handleDoubleTap = () => {
+        const now = Date.now();
+        const DOUBLE_PRESS_DELAY = 300;
+        const { data: { id } } = this.props;
+        const liked = store.getState().liked;
 
-    };
+        if (this.lastTap && (now - this.lastTap) < DOUBLE_PRESS_DELAY) {
+             if(liked.findIndex(item=>item===id) === -1){
+                store.setState({liked: [...liked, id]});
+                showMessage({
+                    message: "Saved in your liked collection.",
+                    type: "info",
+                    backgroundColor: '#fc0349'
+                });
+            }
+            else{
+                // TODO GET 
+                store.setState({liked: liked.filter(item=>item!==id)});
+                showMessage({
+                    message: "You've unliked this photo.",
+                    type: "info",
+                    backgroundColor: '#000000'
+                });
+            }
+        } 
+        else {
+            this.lastTap = now;
+        }
+    }
 
     render() {
-        let { data: { id, user, updated_at, urls, likes, description} } = this.props;
+        let { data: { id, user, updated_at, urls, likes, description, } } = this.props;
+        const { onPressFinishComments } = this.props;
         const loading = this.state;
+
         if(!description) description = " " 
         return (
             <View style={styles.container}>
@@ -81,15 +113,15 @@ export default class Card extends React.Component {
                     fullname={user.name}
                     avatar={user.profile_image.large}
                     location={user.location}
-                    onPressUsername={this.handlePressUsername} 
-                    onPressLocation={this.handlePressLocation} 
-                />
+                    handlePressUsername={this.handlePressUsername} 
+                />        
                 <View style={styles.imageStyle}>
                     {
                         loading && (<ActivityIndicator style={StyleSheet.absoluteFill} size={'large'}/>)
                     }
-                    
-                    <Image style={StyleSheet.absoluteFill} source={{uri: urls.regular}} onLoad={this.handleLoad}/>
+                    <TouchableWithoutFeedback onPress={this.handleDoubleTap}  >
+                        <Image style={StyleSheet.absoluteFill} source={{uri: urls.regular}} onLoad={this.handleLoad}/>
+                    </TouchableWithoutFeedback>
                 </View>
            
                 <ActionRow 
@@ -98,7 +130,10 @@ export default class Card extends React.Component {
                     instagram_username={user.instagram_username}
                     likes={likes}
                     onPressComments={this.handlePressComments}
+                    onPressInputComments={this.handleInputComments}
+                    onPressFinishComments={onPressFinishComments}
                     onPressShare={this.handlePressShare}
+                    onPressUsername={this.handlePressUsername}
                     id={id}
                 />
             </View>

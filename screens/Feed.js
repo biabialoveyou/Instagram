@@ -5,7 +5,7 @@ import { View,
          ActivityIndicator, 
          Text, 
          ViewPropTypes, 
-         SafeAreaView, KeyboardAvoidingView} from 'react-native';
+         SafeAreaView, } from 'react-native';
 import FlashMessage from "react-native-flash-message";
 
 import store from '../store'
@@ -15,6 +15,10 @@ import Comments from '../screens/Comments'
 
 
 export default class Feed extends React.Component {
+    static navigationOptions = {
+        title: 'Feed',
+      };
+
     static propTypes = {
         style: ViewPropTypes.style,
       };
@@ -69,24 +73,60 @@ export default class Feed extends React.Component {
         store.setState({ isFetchingFeed: true, isFetchingFeedError: false,  feedItems:[]});
     };
 
+    onPressUsername = user => {
+        const { navigation: { navigate }} = this.props;
+        navigate('Route1', { user: user });
+    };
+
+    // For comment icon
     onPressFeedComments = id => {
         store.setState({ showComments: true,  selectedItemId: id,})
     };
 
-    onPressCloseComments = (comments) => {
-        const { commentsForItem, selectedItemId } = this.state;
+    onPressCloseComments = newComment => {
+        const { commentsForItem, selectedItemId } = store.getState();
+        index = commentsForItem.findIndex((item)=>(item.id===selectedItemId))
+        if(newComment){
+            if(index===-1){
+                store.setState({
+                    showComments: false,
+                    commentsForItem: [...commentsForItem, 
+                                    {id: selectedItemId, comments: newComment},]})
+            }
+            else {
+              let updatedArray = commentsForItem
+              updatedArray[index] = {...updatedArray[index], comments: newComment}
+              store.setState({
+                showComments: false,
+                commentsForItem: updatedArray
+              });
+            }
+        }
+        else{
+            store.setState({
+                showComments: false,
+            });
+        };
+    };
+
+    // For comment input
+    onPressInputComments = id => {
+        store.setState({ selectedItemId: id,})
+    };
+
+    onPressFinishComments = newComment => {
+        const { commentsForItem, selectedItemId } = store.getState();
         index = commentsForItem.findIndex((item)=>(item.id===selectedItemId))
         if(index===-1){
             store.setState({
-                showComments: false,
                 commentsForItem: [...commentsForItem, 
-                                {id: selectedItemId, comments: comments},]})
+                                {id: selectedItemId, comments: [newComment]},]})
         }
         else {
           let updatedArray = commentsForItem
-          updatedArray[index] = {...updatedArray[index], comments: comments}
+          oldComments = commentsForItem[index].comments
+          updatedArray[index] = {...updatedArray[index], comments: oldComments.concat(newComment)}
           store.setState({
-            showComments: false,
             commentsForItem: updatedArray
           });
       }
@@ -115,7 +155,6 @@ export default class Feed extends React.Component {
                 comments = item.comments;
             }
             else comments=null;
-
             return (
                 <View style={styles.container}>
                     <Comments comments={comments} onPressClose={this.onPressCloseComments}/>
@@ -126,8 +165,13 @@ export default class Feed extends React.Component {
         else{
             return (
                 <SafeAreaView style={style} behavior="padding">
-                    <CardList items={feedItems} onPressComments={this.onPressFeedComments}/>
-                    <FlashMessage position="top" style={{alignItems: 'center'}}/>
+                    <CardList items={feedItems} 
+                              onPressUsername={this.onPressUsername} 
+                              onPressComments={this.onPressFeedComments}
+                              onPressInputComments={this.onPressInputComments}
+                              onPressFinishComments={this.onPressFinishComments}
+                    />
+                    <FlashMessage position="top" style={styles.flashMessage}/>
                 </SafeAreaView>
             );
         }
@@ -139,9 +183,12 @@ styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: 100,
     },
-    text:{
+    text: {
         fontSize: 20,
         fontFamily: 'Palatino-Bold',
         fontWeight: 'bold'
     },
+    flashMessage: {
+        alignItems: 'center',
+    }
 })

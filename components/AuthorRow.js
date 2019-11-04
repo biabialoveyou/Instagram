@@ -6,18 +6,14 @@ import Geocoder from 'react-native-geocoding';
 import Avatar from './Avatar'
 
 
-export default function AuthorRow({ fullname, avatar, location, linkText, onPressUsername, onPressLocation }){
-    handlePressLocation('New York')
+export default function AuthorRow({ fullname, avatar, handlePressUsername, }){
     
     return (
         <View style={styles.container}>
             <Avatar fullname={fullname} avatar={avatar} />
             <View style={styles.nameLocation}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handlePressUsername}>
                     <Text style={styles.username} numberOfLines={1}>{fullname}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity >
-                    <Text numberOfLines={1}>{fullname}</Text>
                 </TouchableOpacity>
             </View>
             <TouchableOpacity>
@@ -28,10 +24,6 @@ export default function AuthorRow({ fullname, avatar, location, linkText, onPres
     )
 }
 
-handlePressLocation = (location) => {
-    // TODO
- 
-}
 
 const styles = StyleSheet.create({
     container : {
@@ -56,6 +48,4 @@ const styles = StyleSheet.create({
 
 AuthorRow.propTypes = {
     fullname : PropTypes.string.isRequired,
-    onPressUsername : PropTypes.func.isRequired,
-    onPressLocation : PropTypes.func.isRequired
 }

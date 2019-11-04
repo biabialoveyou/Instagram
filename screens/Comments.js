@@ -11,6 +11,8 @@ export default class Comments extends React.Component {
         comments: this.props.comments,
     }
 
+    
+
     handleSubmitEditing = newComment => {
         const { comments } = this.state;
 

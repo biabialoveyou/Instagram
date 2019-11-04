@@ -19,11 +19,11 @@ export const fetchPhotos = async () => {
   const url = base_url + 'photos/?client_id=' + CLIENT_ID;
   const response = await fetch(url);
   const photos = await response.json()
-  return photos.slice(0, 5);
+  return photos;
 }
 
 export const fetchPhotosByUser = async (link) => {
-  link = link + '/?client_id=' + CLIENT_ID;
+  link = link + '/?per_page=100&client_id=' + CLIENT_ID;
   const response = await fetch(link);
   const photos = await response.json()
   return photos
