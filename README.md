@@ -1,10 +1,10 @@
 # Instagram
 ## Dependencies:
-react-native-fonts
-react-navigation: "^1.5.2",
-react-native-vector-icons
-react-native-keyboard-aware-scroll-view
-react-native-flash-message
+react-native-fonts  
+react-navigation: "^1.5.2",  
+react-native-vector-icons  
+react-native-keyboard-aware-scroll-view  
+react-native-flash-message  
 
 
 ## Endpoints Used:
