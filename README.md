@@ -1,35 +1,37 @@
 # Instagram
 ## Dependencies:
 react-native-fonts
-"react-navigation": "^1.5.2",
+react-navigation: "^1.5.2",
 react-native-vector-icons
 react-native-keyboard-aware-scroll-view
-
-GET PHOTOS:
-
-curl https://api.unsplash.com/photos/?client_id=04d30b64effa52cb6b92a2c82e71f210405c4e2ac8b0f0ad7f09469e4435f462
+react-native-flash-message
 
 
-GET PHOTOS FOR USER:
+## Endpoints Used:
+API DOC: https://unsplash.com/documentation#get-a-photo
+GET /photos/:id
+GET /photos
 GET /users/:username/photos
 
-https://api.unsplash.com/users/claybanks/photos/?client_id=04d30b64effa52cb6b92a2c82e71f210405c4e2ac8b0f0ad7f09469e4435f462
 
-
-
-FEED:
-No Internect Connect:
+## Functions
+# FEED Screen
+Showing the images fetched from /photos
+1. No Internect Connect:
     - A text showing error 
     - Tap text to try reload
+2. 
 
-Photos:
-    - On end reached: load more photos 
+# USER Screen
+1. If no user selected, by default it shows all photos of one user
+2. If select user from "Feed" by clicking username or title, it shows all photos of selected user.
+3. Display 6 photos by default, loads more on reach end.
 
-Avatar:
-    - Display user profile image if any
-    - If no profile image then initials
 
-Location:
+# Liked Screen
+1. No liked images - Text showing "Your liked photo will show up here"
+2. Liked images - all show up there, update automatically if user unlike old or like new images.
+
 
 
 
